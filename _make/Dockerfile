@@ -1,4 +1,9 @@
-FROM quay.io/pypa/manylinux2014_x86_64
+# Target architecture: x86_64 (default) or aarch64.
+# Used for the base image, the CMake download, and matches `uname -m`.
+ARG ARCH=x86_64
+FROM quay.io/pypa/manylinux2014_${ARCH}
+# re-declare so ${ARCH} is usable in RUN steps below the FROM
+ARG ARCH
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV HOME="/root"
@@ -16,8 +21,8 @@ RUN yum -y install gcc wget \
 RUN cd /usr/lib64; ln -s libstdc++.so.6.0.19 libstdc++.so
 
 # install old cmake
-RUN cd /tmp && wget https://github.com/Kitware/CMake/releases/download/v3.31.9/cmake-3.31.9-linux-x86_64.sh
-RUN sh /tmp/cmake-3.31.9-linux-x86_64.sh --prefix=/usr/local --exclude-subdir --skip-license
+RUN cd /tmp && wget https://github.com/Kitware/CMake/releases/download/v3.31.9/cmake-3.31.9-linux-${ARCH}.sh
+RUN sh /tmp/cmake-3.31.9-linux-${ARCH}.sh --prefix=/usr/local --exclude-subdir --skip-license
 
 RUN wget https://github.com/MarcToussaint/rai/raw/master/_make/install.sh; chmod a+x install.sh
 

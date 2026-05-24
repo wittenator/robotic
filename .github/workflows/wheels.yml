@@ -1,0 +1,78 @@
+name: Wheels
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build wheels (${{ matrix.arch }})
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x86_64
+            runner: ubuntu-24.04
+          - arch: aarch64
+            runner: ubuntu-24.04-arm
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build manylinux image
+        uses: docker/build-push-action@v6
+        with:
+          context: _make
+          file: _make/Dockerfile
+          build-args: |
+            ARCH=${{ matrix.arch }}
+          tags: rai-manylinux-${{ matrix.arch }}
+          load: true   # make the image available to the docker daemon for `docker run`
+          # GitHub Actions layer cache, scoped per-arch so the two builds don't evict each other
+          cache-from: type=gha,scope=${{ matrix.arch }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.arch }}
+
+      - name: Build wheels
+        run: |
+          docker run --rm \
+            --network host \
+            -v "${{ github.workspace }}:/root/local" \
+            rai-manylinux-${{ matrix.arch }} \
+            /bin/bash /root/local/_make/build-wheels.sh
+
+      - name: Upload wheels
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheels-${{ matrix.arch }}
+          path: dist/*.whl
+          if-no-files-found: error
+
+  publish:
+    name: Publish to PyPI
+    needs: build
+    if: github.event_name == 'release'
+    runs-on: ubuntu-24.04
+    environment: pypi
+    permissions:
+      id-token: write   # required for PyPI Trusted Publishing (OIDC)
+    steps:
+      - name: Download all wheels
+        uses: actions/download-artifact@v4
+        with:
+          pattern: wheels-*
+          path: dist
+          merge-multiple: true
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist

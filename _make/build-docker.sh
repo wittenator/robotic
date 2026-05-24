@@ -1,6 +1,12 @@
 #/bin/sh
 
+# Build the manylinux wheel-build image.
+# Usage: build-docker.sh [ARCH]   where ARCH is x86_64 (default) or aarch64
+ARCH="${1:-x86_64}"
+
 docker build \
+       --build-arg ARCH="${ARCH}" \
        --tag rai-manylinux \
+       --tag "rai-manylinux-${ARCH}" \
        --network host \
        -f Dockerfile . #&> build.log #--no-cache

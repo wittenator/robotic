@@ -1,7 +1,11 @@
 #/bin/sh
 
-cd $HOME/local 
+cd $HOME/local
 ln -f -s _make/CMakeLists-docker.txt CMakeLists.txt
+
+### platform tag for the wheels: uname -m gives x86_64 or aarch64,
+### which match the manylinux2014 suffixes exactly
+PLAT="manylinux2014_$(uname -m)"
 
 ### delete setup temp files
 rm -Rf robotic/__pycache__ dist/ build/bdist* build/lib robotic.egg-info
@@ -26,8 +30,8 @@ for ver in 12 13 14 10 11; do
     python3.$ver -m build --quiet
 
     echo -e "\n\n======== renaming wheel ========"
-    for wheel in $(find dist -iname "*any.whl") ; do 
-	mv $wheel $(echo $wheel | sed 's/-py3-none-any/-cp3'$ver'-cp3'$ver'-manylinux2014_x86_64/')
+    for wheel in $(find dist -iname "*any.whl") ; do
+	mv $wheel $(echo $wheel | sed 's/-py3-none-any/-cp3'$ver'-cp3'$ver'-'"$PLAT"'/')
     done
     #break
 done
