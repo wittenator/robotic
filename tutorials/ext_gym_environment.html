@@ -1,0 +1,373 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Extension - Gym Environment Interface: minimal example &mdash; Robotic Python Library 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Notes" href="../notes.html" />
+    <link rel="prev" title="Extension - NLP interface: Low-level NLP formulation and solving" href="ext_nlp_solvers.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Robotic Python Library
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="config_1_intro.html">Intro: Configurations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="komo_1_intro.html">Intro: KOMO - Motion Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="botop_1_intro.html">Intro: BotOp (Robot Operation) interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="botop_2_real_robot.html">BotOp-2: Real robot operation checklist &amp; first steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="botop_3_stepInterface.html">BotOp-3: Step Inferace (env-like) example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config_2_features.html">Config-2: Computing differentiable features &amp; collision evaluation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config_3_import_edit.html">Config-3: Importing, editing &amp; manipulating them</a></li>
+<li class="toctree-l2"><a class="reference internal" href="komo_2_reporting.html">KOMO-2: Reporting &amp; explaining convergence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="komo_3_manipulation.html">KOMO-3: Manipulation Modelling &amp; Execution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lgp_1_intro.html">LGP-1: First Mini Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ext_physx_simulation.html">Extension - Simulation: Low-level stepping interface &amp; gym environments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ext_rendering.html">Extension - Rendering: Basic opengl, offscreen (headless), and interface to physics-based rendering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ext_rrt.html">Extension - RRT: basic finding example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ext_nlp_solvers.html">Extension - NLP interface: Low-level NLP formulation and solving</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Extension - Gym Environment Interface: minimal example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../notes.html">Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">robotic python API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Robotic Python Library</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../tutorials.html">Tutorials</a></li>
+      <li class="breadcrumb-item active">Extension - Gym Environment Interface: minimal example</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorials/ext_gym_environment.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="Extension---Gym-Environment-Interface:-minimal-example">
+<h1>Extension - Gym Environment Interface: minimal example<a class="headerlink" href="#Extension---Gym-Environment-Interface:-minimal-example" title="Link to this heading"></a></h1>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import robotic as ry
+import gymnasium as gym
+import numpy as np
+import time
+print(&#39;ry version:&#39;, ry.compiled())
+</pre></div>
+</div>
+</div>
+<p>Let’s first create a configuration</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>C = ry.Config()
+C.addFile(ry.raiPath(&#39;scenarios/pandaSingle.g&#39;))
+C.setJointState([.007], [&#39;l_panda_finger_joint1&#39;]) #only cosmetics
+#the following makes it a LOT simpler
+C.setJointState([.0], [&#39;l_panda_joint2&#39;])
+C.setJointState([.7], [&#39;l_panda_joint7&#39;])
+gripper = &#39;l_gripper&#39;
+
+box = C.addFrame(&#39;box&#39;) \
+    .setShape(ry.ST.ssBox, size=[.1,.1,.1,.005]) .setColor([1,.5,0]) \
+    .setPosition([.06,.35,.7]) \
+    .setMass(.1) \
+    .setAttributes({&#39;friction&#39;: .5})
+box.setPosition([.1,.35,.7]) # this is the initial position of the box - change manually to make harder
+
+C.addFrame(&#39;plate&#39;, gripper) \
+    .setShape(ry.ST.ssBox, size=[.02,.2,.36,.005]) .setColor([.5,1,0]) \
+    .setRelativePosition([0,0,-.16]) \
+    .setAttributes({&#39;friction&#39;: .1})
+
+C.addFrame(&#39;target&#39;) \
+    .setShape(ry.ST.marker, size=[.1]) .setColor([0,1,0]) \
+    .setPosition([.3,.3,.7])
+
+C.view()
+</pre></div>
+</div>
+</div>
+<p>Here is a basic class implementing a gym.Env:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>class RoboticGym(gym.Env):
+    metadata = {&quot;render_modes&quot;: [&quot;human&quot;, &quot;rgb_array&quot;], &quot;render_fps&quot;: 4}
+    tau_env = .05 #a gym environment step corresponds to 0.05 sec
+    tau_sim = .01 #the underlying physics simulation is stepped with 0.01 sec (5 sim steps in each env step)
+    time = 0.
+    render_mode = &#39;human&#39;
+
+    viewSteps = False
+    random_reset = False
+
+    def __init__(self, C:ry.Config, time_limit, sim_verbose=0):
+        self.time_limit = time_limit
+
+        # create/load the robotic configuration
+        self.C = C
+        self.q0 = self.C.getJointState()
+        self.X0 = self.C.getFrameState()
+        self.box = self.C.getFrame(&#39;box&#39;)
+        n = self.q0.size
+
+        # define the observation space (see also observation_fct())
+        self.observation_space = gym.spaces.Box(-2., +2., shape=(2*n + 7 + 6,), dtype=np.float32)
+
+        # define the action space
+        action_scale = 5
+        action_dim = n
+        self.action_space = gym.spaces.Box(-action_scale, +action_scale, shape=(action_dim,), dtype=np.float32)
+
+        # create the underlying physics simulation (using PhysX from Nvidia)
+        self.sim = ry.Simulation(self.C, ry.SimulationEngine.physx, verbose=sim_verbose)
+        self.state0 = self.sim.getState()
+
+    def __del__(self):
+        del self.sim
+        del self.C
+
+    def step(self, action):
+        &#39;&#39;&#39;essential to implement gym.Env&#39;&#39;&#39;
+        self.step_qDelta(action)
+
+        self.time += self.tau_env
+
+        observation = self.observation_fct()
+        reward = self.reward_fct()
+        terminated = False
+        truncated = (self.time &gt;= self.time_limit) # terminated and truncated difference is super important
+        info = {&quot;no&quot;: &quot;additional info&quot;}
+        return observation, reward, terminated, truncated, info
+
+    def observation_fct(self):
+        &#39;&#39;&#39;observations are joint pos/vel, and box pos/vel&#39;&#39;&#39;
+        state = self.sim.getState()
+        q = state.q
+        qDot = state.qDot
+        box_pos = state.freePos[0,:]
+        box_vel = state.freeVel[0,:,:].reshape(-1)
+        observation = np.concatenate((q, qDot, box_pos, box_vel), axis=0)
+        return observation
+
+    def reward_fct(self):
+        &#39;&#39;&#39;two reward terms: box-at-goal reward (peaked) and touch object reward (negDistance)&#39;&#39;&#39;
+        goalDist, _ = self.C.eval(ry.FS.positionDiff, [&quot;box&quot;, &quot;target&quot;])
+        sigma = .2
+        r = 1. - np.tanh(np.linalg.norm(goalDist)/sigma)
+
+        negObjDistance, _ = self.C.eval(ry.FS.negDistance, [&quot;plate&quot;, &quot;box&quot;])
+        r += negObjDistance[0]
+        return r
+
+    def step_qDelta(self, delta):
+        &#39;&#39;&#39;sending deltas in joint space; where deltas have semantic of velocity&#39;&#39;&#39;
+        # the sim needs to run at least with 100Hz (to properly simulate collisions)
+        # that&#39;s why we have multiple sim steps for each env step
+        sim_steps = int(self.tau_env/self.tau_sim)
+        delta[-1] *= 5.
+        for s in range(sim_steps):
+            #the following converts the deltas to position references for the underlying sim PD controller
+            q = self.sim.get_q()
+            self.sim.step(q + self.tau_sim * delta, self.tau_sim, ry.ControlMode.position)
+            if self.viewSteps:
+                self.C.view()
+                time.sleep(self.tau_sim)
+
+    def reset(self, seed=None):
+        &#39;&#39;&#39;essential to implement gym.Env&#39;&#39;&#39;
+        super().reset(seed=seed)
+
+        # X = self.state0.copy()
+        # if self.random_reset:
+        #     # resetting the box position to a random initial position -- makes it MUCH harder
+        #     X[self.box.ID, :2] += .3 * np.random.randn(2)
+
+        # resetting the sim
+        self.time = 0.
+        self.sim.resetTime()
+        self.sim.setState(self.state0)
+        self.sim.resetSplineRef()
+
+        observation = self.observation_fct()
+        info = {&quot;no&quot;: &quot;additional info&quot;}
+        return observation, info
+
+    def rollout(self, pi):
+        &#39;&#39;&#39;helper to play and view a policy&#39;&#39;&#39;
+        self.viewSteps=True #triggers display within the low level step functions
+        obs, info = self.reset()
+        t = 0
+        R = 0
+        while True:
+            action = pi(obs, t)
+            obs, reward, terminated, truncated, info = self.step(action)
+            R += reward
+            t += 1
+            print(&quot;reward: &quot;, reward)
+            if terminated or truncated:
+                break
+        print(&#39;total return:&#39;, R)
+        self.viewSteps=False #disables display within the low level step functions
+
+    def render(self):
+        &#39;&#39;&#39;also part of the env.Gym&#39;&#39;&#39;
+        self.C.view(False, f&#39;RoboticGym time {self.time} / {self.time_limit}&#39;)
+        if self.render_mode == &quot;rgb_array&quot;:
+            return self.C.view_getRgb()
+</pre></div>
+</div>
+</div>
+<p>Note in particular the reward_fct and observation_fct above, using the <code class="docutils literal notranslate"><span class="pre">eval</span></code> methods to access geometric features.</p>
+<p>Let’s first rollout a trivial policy:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>env = RoboticGym(C, time_limit=3., sim_verbose=0)  #verbosity of underlying sim - set to 2 once to see actual exploration during training
+
+pi = lambda obs, t : np.array([-1.,0.,-1.,0,0,0,0])
+env.rollout(pi)
+env.C.view()
+</pre></div>
+</div>
+</div>
+<p>And we can train standard RL:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from stable_baselines3 import SAC, PPO
+from stable_baselines3.common.callbacks import CheckpointCallback
+import torch
+print(torch.__version__)
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>checkpoint_callback = CheckpointCallback(save_freq=10000, save_path=&#39;./checkpoints_endeffectorActions/&#39;, name_prefix=&#39;rl_model&#39;)
+
+model = SAC(&quot;MlpPolicy&quot;, env, gamma=0.99, learning_rate=3e-3, verbose=1, tensorboard_log=&quot;./tensorboard/&quot;)
+# model = PPO(&quot;MlpPolicy&quot;, env, gamma=0.99, learning_rate=3e-3, n_steps=1024, verbose=1, tensorboard_log=&quot;./tensorboard/&quot;)
+
+model.learn(total_timesteps=1_000, callback=checkpoint_callback)
+</pre></div>
+</div>
+</div>
+<p>… and roll out the trained policy</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># model = SAC.load(&#39;./checkpoints_endeffectorActions/rl_model_199498_steps.zip&#39;, env=env)
+
+while True:
+    pi = lambda obs, t : model.predict(obs, deterministic=True)[0] #change deterministic to False to see with noise
+    env.rollout(pi)
+    if env.C.view(True, &#39;press q to stop looping&#39;) == ord(&#39;q&#39;):
+        break
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ext_nlp_solvers.html" class="btn btn-neutral float-left" title="Extension - NLP interface: Low-level NLP formulation and solving" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../notes.html" class="btn btn-neutral float-right" title="Notes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Marc Toussaint.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

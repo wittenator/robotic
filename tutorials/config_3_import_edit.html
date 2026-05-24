@@ -1,0 +1,395 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Config-3: Importing, editing &amp; manipulating them &mdash; Robotic Python Library 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="KOMO-2: Reporting &amp; explaining convergence" href="komo_2_reporting.html" />
+    <link rel="prev" title="Config-2: Computing differentiable features &amp; collision evaluation" href="config_2_features.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Robotic Python Library
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="config_1_intro.html">Intro: Configurations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="komo_1_intro.html">Intro: KOMO - Motion Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="botop_1_intro.html">Intro: BotOp (Robot Operation) interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="botop_2_real_robot.html">BotOp-2: Real robot operation checklist &amp; first steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="botop_3_stepInterface.html">BotOp-3: Step Inferace (env-like) example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config_2_features.html">Config-2: Computing differentiable features &amp; collision evaluation</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Config-3: Importing, editing &amp; manipulating them</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Importing-robot-models">Importing robot models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Creating-a-grid-of-duplicated-configurations">Creating a grid of duplicated configurations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Conversion-from-URDF">Conversion from URDF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Configuration-file-(.g-file)-syntax">Configuration file (.g-file) syntax</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Interactive-Editing">Interactive Editing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#How-to-attach-frames---faking-grasps">How to attach frames - faking grasps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Advanced:-YAML-and-dict-representations">Advanced: YAML and dict representations</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="komo_2_reporting.html">KOMO-2: Reporting &amp; explaining convergence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="komo_3_manipulation.html">KOMO-3: Manipulation Modelling &amp; Execution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lgp_1_intro.html">LGP-1: First Mini Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ext_physx_simulation.html">Extension - Simulation: Low-level stepping interface &amp; gym environments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ext_rendering.html">Extension - Rendering: Basic opengl, offscreen (headless), and interface to physics-based rendering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ext_rrt.html">Extension - RRT: basic finding example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ext_nlp_solvers.html">Extension - NLP interface: Low-level NLP formulation and solving</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ext_gym_environment.html">Extension - Gym Environment Interface: minimal example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../notes.html">Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">robotic python API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Robotic Python Library</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../tutorials.html">Tutorials</a></li>
+      <li class="breadcrumb-item active">Config-3: Importing, editing &amp; manipulating them</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorials/config_3_import_edit.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="Config-3:-Importing,-editing-&amp;-manipulating-them">
+<h1>Config-3: Importing, editing &amp; manipulating them<a class="headerlink" href="#Config-3:-Importing,-editing-&-manipulating-them" title="Link to this heading"></a></h1>
+<ul class="simple">
+<li><p>This scripts loads a mini scene defined in ‘mini.g’.</p></li>
+<li><p>The ‘watchFile’ command allows you to edit the file in some other editor, while it is being redisplayed whenever you save.</p></li>
+<li><p>‘set/getJointState’ shows how to access degrees-of-freedom of the scene</p></li>
+<li><p>‘eval’ shows how to access other features, including its Jacobian</p></li>
+</ul>
+<section id="Importing-robot-models">
+<h2>Importing robot models<a class="headerlink" href="#Importing-robot-models" title="Link to this heading"></a></h2>
+<p>Let’s first have a look at robot models that are already installed with rai. (They are defined in the <code class="docutils literal notranslate"><span class="pre">rai-robotModels</span></code> github repo, which is partly copied into the <code class="docutils literal notranslate"><span class="pre">.../site-packages/robotic/rai-robotModels</span></code> install path.)</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import robotic as ry
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(&#39;The path where model files are pre-installed:\n&#39;, ry.raiPath(&#39;&#39;))
+# you could overwrite this with:
+# ry.setRaiPath(&#39;your_path/rai-robotModels/&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>C = ry.Config()
+C.addFile(ry.raiPath(&#39;panda/panda.g&#39;)) .setPosition([1.,.0,.0]) .setQuaternion([1,0,0,1])
+C.addFile(ry.raiPath(&#39;panda/panda.g&#39;), &#39;r_&#39;) .setPosition([1.5,.0,.0]) .setQuaternion([1,0,0,1])
+C.addFile(ry.raiPath(&#39;robotiq/robotiq.g&#39;)) .setParent(C.getFrame(&#39;panda_joint7&#39;)) .setRelativePosition([0., 0., .15])
+C.addFile(ry.raiPath(&#39;g1/g1.g&#39;)) .setPosition([.5, 0., .8]) .setQuaternion([1,0,0,1])
+C.addFile(ry.raiPath(&#39;pr2/pr2.g&#39;)) .setPosition([-.5,.0,.0])
+C.addFile(ry.raiPath(&#39;ur10/ur10.g&#39;)) .setPosition([-1.5,.0,.5])
+C.view()
+</pre></div>
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">addFile</span></code> returns the <em>first</em> frame defined in the file, which typically is the base frame of the whole robot. Therefore, by setting it’s position, you can move the whole loaded robot.</p>
+<p>Sometimes you want to add a model twice, but avoid duplicated frame names. With <code class="docutils literal notranslate"><span class="pre">addFile</span></code> you can specify a <code class="docutils literal notranslate"><span class="pre">prefix</span></code> string (here <code class="docutils literal notranslate"><span class="pre">r_</span></code>) which add that prefix to all frame names of the added robot. This is exemplified with the second panda added here.</p>
+<p>The Robotiq example also shows that this base frame can be made a child of other frames – attaching the robotiq to the panda arm. (Here in addition to the existing gripper, which would first have to be removed using <code class="docutils literal notranslate"><span class="pre">C.delFrame</span></code>.)</p>
+<p>The following is a simple helper to articulare all dofs in the display (press <code class="docutils literal notranslate"><span class="pre">q</span></code> to interrupt):</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>#C.animate()
+C.animateSpline(5)
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>del C
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Creating-a-grid-of-duplicated-configurations">
+<h2>Creating a grid of duplicated configurations<a class="headerlink" href="#Creating-a-grid-of-duplicated-configurations" title="Link to this heading"></a></h2>
+<p>It’s become populat to setup simulations to include a grid of copies of the scene. Here how to do this:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import robotic as ry
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>C = ry.Config()
+table = C.addFrame(&#39;table&#39;) .setShape(ry.ST.ssBox,[.5, .5, .1, .01]) .setPosition([0,0,1]) .setColor([.2])
+panda = C.addFile(ry.raiPath(&#39;panda/panda.g&#39;))
+panda.setParent(table) .setRelativePosition([0,0,.05])
+C.view()
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>Cgrid = ry.Config()
+d = 6
+for x in range(d):
+    for y in range(d):
+        base = Cgrid.addConfigurationCopy(C, f&#39;x{x}_y{y}_&#39;) #the string adds a prefix to all frame names
+        base.setPosition([x-(d-1)/2,y-(d-1)/2,1])
+print(&#39;#frame in grid:&#39;, Cgrid.getFrameDimension())
+print(&#39;1st frame\&#39;s name:&#39;, Cgrid.getFrames()[0].name)
+Cgrid.view()
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>Cgrid.animateSpline()
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>del Cgrid
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Conversion-from-URDF">
+<h2>Conversion from URDF<a class="headerlink" href="#Conversion-from-URDF" title="Link to this heading"></a></h2>
+<p>The python package should install a script <code class="docutils literal notranslate"><span class="pre">urdf2rai.py</span></code> in <code class="docutils literal notranslate"><span class="pre">.local/bin</span></code>. That converts a urdf-file to a .g-file. For instance, place a <code class="docutils literal notranslate"><span class="pre">ur10.urdf</span></code> and the <code class="docutils literal notranslate"><span class="pre">ur_description</span></code> folder into the same folder and run:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>urdf2rai.py ur10.urdf &gt; ur10_org.g
+</pre></div>
+</div>
+<p>That should generate a <code class="docutils literal notranslate"><span class="pre">ur10_org.g</span></code> file that can be displayed with <code class="docutils literal notranslate"><span class="pre">kinEdit</span> <span class="pre">ur10_org.g</span></code>. Note, by default that <strong>excludes</strong> exporting collision shapes (as I typically replace them, e.g. by the convex hull of the visual shapes). The <code class="docutils literal notranslate"><span class="pre">-coll</span> <span class="pre">1</span></code> option of the script should include also the collision shapes. The <code class="docutils literal notranslate"><span class="pre">rai-robotModels</span></code> repository README provides more info on conversion from URDF, as well as specific examples for those models included in the package.</p>
+</section>
+<section id="Configuration-file-(.g-file)-syntax">
+<h2>Configuration file (.g-file) syntax<a class="headerlink" href="#Configuration-file-(.g-file)-syntax" title="Link to this heading"></a></h2>
+<p>The <a class="reference external" href="../notes.html#yaml-graph-files">Notes:Yaml-Graph Files</a> provides a more detailed description of the underlying syntax of the .g-files. While the syntax should be yaml compatible, the fact that node names use <code class="docutils literal notranslate"><span class="pre">(&lt;parents&gt;)</span></code> to define the parent(s) of a node, filenames should be strings <code class="docutils literal notranslate"><span class="pre">&lt;filename&gt;</span></code>, and the additional <code class="docutils literal notranslate"><span class="pre">Include</span></code>, <code class="docutils literal notranslate"><span class="pre">Edit</span></code>, and <code class="docutils literal notranslate"><span class="pre">Delete</span></code> tags extend the semantics of what can be define in such a file.</p>
+<p>In essence, to describe a robot/world configuration, every node describes a frame, and is described by three things: <code class="docutils literal notranslate"><span class="pre">&lt;frame-name&gt;</span> <span class="pre">(</span> <span class="pre">&lt;parent&gt;</span> <span class="pre">)</span> <span class="pre">{</span> <span class="pre">&lt;attributes&gt;</span> <span class="pre">}</span></code>, where <code class="docutils literal notranslate"><span class="pre">&lt;parent&gt;</span></code> needs to be a previously defined frame, or omitted, if the frame is a root frame. The attributes define properties of the frame, such as its pose (<code class="docutils literal notranslate"><span class="pre">X</span></code>), relative transformation (<code class="docutils literal notranslate"><span class="pre">Q</span></code>), shape, joint, and inertia properties. The main interpreted attributes are the following. Internally, a few more attributes are
+interpreted in experimental code (also your python code can retrieve attributes via <code class="docutils literal notranslate"><span class="pre">f.info()</span></code>).</p>
+<p>Frame: <code class="docutils literal notranslate"><span class="pre">X</span> <span class="pre">Q</span></code></p>
+<p>Shape: <code class="docutils literal notranslate"><span class="pre">shape</span> <span class="pre">size</span> <span class="pre">contact</span> <span class="pre">mesh</span> <span class="pre">meshscale</span> <span class="pre">core</span> <span class="pre">sdf</span> <span class="pre">color</span> <span class="pre">texture</span></code></p>
+<p>Joint: <code class="docutils literal notranslate"><span class="pre">joint</span> <span class="pre">joint_scale</span> <span class="pre">q</span> <span class="pre">Q</span> <span class="pre">limits</span> <span class="pre">ctrl_limits</span> <span class="pre">ctrl_H</span> <span class="pre">sampleUniform</span> <span class="pre">joint_active</span> <span class="pre">mimic</span></code></p>
+<p>Inertia: <code class="docutils literal notranslate"><span class="pre">mass</span> <span class="pre">inertia</span></code></p>
+</section>
+<section id="Interactive-Editing">
+<h2>Interactive Editing<a class="headerlink" href="#Interactive-Editing" title="Link to this heading"></a></h2>
+<p>When developing your own model (robot or scene), you could of course just use the python commands <code class="docutils literal notranslate"><span class="pre">addFrame</span></code> etc. But that might be cumbersome and not interactive enough. The .g-file format is fairly easy to edit. To help doing this more interactively, there is the <code class="docutils literal notranslate"><span class="pre">watchFile</span></code> method:</p>
+<p>Open the file you want to edit (here <code class="docutils literal notranslate"><span class="pre">mini.g</span></code>) in any editor. At the same time, open it from within python and display it using <code class="docutils literal notranslate"><span class="pre">watchFile</span></code>. The key benefit is that <code class="docutils literal notranslate"><span class="pre">watchFile</span></code> reloads and re-displays the file whenever it is externally modified (it watches the file’s inode). That enables interactive editing. It also allows you to return information on objects you point on (their name and attributes), which helps a lot to inspect models. It also reports on collisions in the configuration.</p>
+<p>A <code class="docutils literal notranslate"><span class="pre">ry-view</span></code> command line script is shipped with the python package, which simply calls <code class="docutils literal notranslate"><span class="pre">watchFile</span></code>. Editing from command line with this script makes it easier to see the info and error messages, e.g. when you get the syntax wrong. Jupyter is problematic, as it holds info messages back – still, here an example directly from within python:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import robotic as ry
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>C = ry.Config()
+C.watchFile(&#39;mini.g&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>del C
+</pre></div>
+</div>
+</div>
+</section>
+<section id="How-to-attach-frames---faking-grasps">
+<h2>How to attach frames - faking grasps<a class="headerlink" href="#How-to-attach-frames---faking-grasps" title="Link to this heading"></a></h2>
+<p>Note, this is not real grasping. Just editing the kinematic tree in your configuration</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import robotic as ry
+import numpy as np
+import time
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>C = ry.Config()
+C.addFile(ry.raiPath(&#39;scenarios/pandasTable.g&#39;))
+C.view()
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>C.attach(&quot;l_gripper&quot;, &quot;r_gripper&quot;)
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>#move a bit around
+
+q = C.getJointState()
+
+for t in range(30):
+    q[0] = np.sin(t/10)
+
+    C.setJointState(q)
+    C.view()
+    time.sleep(0.1)
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>del C
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Advanced:-YAML-and-dict-representations">
+<h2>Advanced: YAML and dict representations<a class="headerlink" href="#Advanced:-YAML-and-dict-representations" title="Link to this heading"></a></h2>
+<p>The following shows that configuration files are essentially YAML files with some special semantics. We can load the configuration description as a dict using yaml as follows:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import yaml
+
+with open(ry.raiPath(&#39;panda/panda_arm_hand_conv.yml&#39;), &#39;r&#39;, encoding=&#39;utf-8&#39;) as fil:
+    model = yaml.safe_load(fil)
+
+print(model)
+</pre></div>
+</div>
+</div>
+<p>This dict contains all information about the configuration.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="config_2_features.html" class="btn btn-neutral float-left" title="Config-2: Computing differentiable features &amp; collision evaluation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="komo_2_reporting.html" class="btn btn-neutral float-right" title="KOMO-2: Reporting &amp; explaining convergence" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Marc Toussaint.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
