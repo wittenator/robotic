@@ -13,10 +13,14 @@ ENV MAKEFLAGS="-j$(command nproc --ignore 1)"
 ##########################################################
 
 RUN yum -y install gcc wget \
-    atlas-devel f2c-devel zlib-devel \
+    atlas-devel zlib-devel \
     mesa-libGLU-devel libXcursor-devel libXi-devel libXinerama-devel libXrandr-devel \
     clang lapack-static atlas-static \
     glm-devel freetype-devel
+
+# f2c-devel is only packaged for x86_64 in the manylinux2014 repos (absent on aarch64),
+# and the build does not actually link against it -- install it where available, skip otherwise
+RUN yum -y install f2c-devel || echo "f2c-devel unavailable for ${ARCH}, skipping"
     
 RUN cd /usr/lib64; ln -s libstdc++.so.6.0.19 libstdc++.so
 
