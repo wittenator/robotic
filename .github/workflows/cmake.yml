@@ -34,6 +34,7 @@ jobs:
         ./install.sh libccd
         ./install.sh fcl
         ./install.sh libann
+        ./install.sh librealsense
     - name: setup build files
       run: |
         cp _make/CMakeLists-ubuntu.txt CMakeLists.txt
