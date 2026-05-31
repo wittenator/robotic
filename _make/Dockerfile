@@ -1,7 +1,7 @@
 # Target architecture: x86_64 (default) or aarch64.
 # Used for the base image, the CMake download, and matches `uname -m`.
 ARG ARCH=x86_64
-FROM manylinux_2_34_${ARCH}
+FROM manylinux_2_28_${ARCH}
 # re-declare so ${ARCH} is usable in RUN steps below the FROM
 ARG ARCH
 
