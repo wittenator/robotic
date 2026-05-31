@@ -16,7 +16,7 @@ RUN yum -y install gcc wget \
     atlas-devel zlib-devel \
     mesa-libGLU-devel libXcursor-devel libXi-devel libXinerama-devel libXrandr-devel \
     clang lapack-static atlas-static \
-    glm-devel freetype-devel
+    glm-devel freetype-devel epel-release
 
 # f2c-devel is only packaged for x86_64 in the manylinux2014 repos (absent on aarch64),
 # and the build does not actually link against it -- install it where available, skip otherwise
