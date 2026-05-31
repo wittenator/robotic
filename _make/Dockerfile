@@ -12,13 +12,19 @@ ENV MAKEFLAGS="-j$(command nproc --ignore 1)"
 
 ##########################################################
 
-RUN dnf -y install gcc wget \
-    atlas-devel zlib-devel \
-    mesa-libGLU-devel libXcursor-devel libXi-devel libXinerama-devel libXrandr-devel \
-    clang lapack-static atlas-static \
-    glm-devel freetype-devel f2c-devel cmake
+RUN dnf -y install epel-release && \
+    dnf -y install --enablerepo=powertools \
+        gcc wget cmake clang \
+        zlib-devel freetype-devel \
+        mesa-libGLU-devel \
+        libXcursor-devel libXi-devel libXinerama-devel libXrandr-devel \
+        lapack-static \
+        glm-devel \
+        openblas-devel openblas-static \
+        f2c f2c-libs && \
+    wget https://www.netlib.org/f2c/f2c.h -O /usr/local/include/f2c.h
     
-RUN cd /usr/lib64; ln -s libstdc++.so.6.0.19 libstdc++.so
+#RUN cd /usr/lib64; ln -s libstdc++.so.6.0.19 libstdc++.so
 
 RUN wget https://github.com/MarcToussaint/rai/raw/master/_make/install.sh; chmod a+x install.sh
 
