@@ -1,7 +1,7 @@
 # Target architecture: x86_64 (default) or aarch64.
 # Used for the base image, the CMake download, and matches `uname -m`.
 ARG ARCH=x86_64
-FROM manylinux_2_28_${ARCH}
+FROM quay.io/pypa/manylinux_2_28_${ARCH}
 # re-declare so ${ARCH} is usable in RUN steps below the FROM
 ARG ARCH
 
@@ -12,7 +12,7 @@ ENV MAKEFLAGS="-j$(command nproc --ignore 1)"
 
 ##########################################################
 
-RUN yum -y install gcc wget \
+RUN dnf -y install gcc wget \
     atlas-devel zlib-devel \
     mesa-libGLU-devel libXcursor-devel libXi-devel libXinerama-devel libXrandr-devel \
     clang lapack-static atlas-static \
