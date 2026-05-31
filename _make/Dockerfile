@@ -1,7 +1,7 @@
 # Target architecture: x86_64 (default) or aarch64.
 # Used for the base image, the CMake download, and matches `uname -m`.
 ARG ARCH=x86_64
-FROM quay.io/pypa/manylinux2014_${ARCH}
+FROM manylinux_2_34_${ARCH}
 # re-declare so ${ARCH} is usable in RUN steps below the FROM
 ARG ARCH
 
@@ -16,17 +16,9 @@ RUN yum -y install gcc wget \
     atlas-devel zlib-devel \
     mesa-libGLU-devel libXcursor-devel libXi-devel libXinerama-devel libXrandr-devel \
     clang lapack-static atlas-static \
-    glm-devel freetype-devel epel-release
-
-# f2c-devel is only packaged for x86_64 in the manylinux2014 repos (absent on aarch64),
-# and the build does not actually link against it -- install it where available, skip otherwise
-RUN yum -y install f2c-devel || echo "f2c-devel unavailable for ${ARCH}, skipping"
+    glm-devel freetype-devel f2c-devel cmake
     
 RUN cd /usr/lib64; ln -s libstdc++.so.6.0.19 libstdc++.so
-
-# install old cmake
-RUN cd /tmp && wget https://github.com/Kitware/CMake/releases/download/v3.31.9/cmake-3.31.9-linux-${ARCH}.sh
-RUN sh /tmp/cmake-3.31.9-linux-${ARCH}.sh --prefix=/usr/local --exclude-subdir --skip-license
 
 RUN wget https://github.com/MarcToussaint/rai/raw/master/_make/install.sh; chmod a+x install.sh
 
