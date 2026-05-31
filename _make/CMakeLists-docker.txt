@@ -62,7 +62,7 @@ include_directories(
 
 link_directories(
   $ENV{HOME}/.local/lib
-  /usr/lib64/atlas
+  /usr/include/openblas
   )
 
 if(USE_PHYSX)
