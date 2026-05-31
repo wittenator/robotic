@@ -35,7 +35,7 @@ local-clean:
 	-rm -Rf robotic/__pycache__ build/bdist* build/lib robotic.egg-info
 
 wheels:
-	$(eval id = $(shell _make/run-docker.sh -d))
+	$(eval id = $(shell _make/run-docker.sh rai-manylinux -d))
 	@echo "started docker " ${id}
 	docker exec -it ${id} /bin/bash -C local/_make/build-wheels.sh
 	docker stop ${id}
@@ -47,22 +47,23 @@ wheels-upload:
 wheels-install:
 	python$(PY_VER) -m pip install dist/robotic-*cp312*.whl --force-reinstall
 
-#test-buildFromScratch:
-#	$(eval id = $(shell _make/run-docker.sh ubuntu -d))
-#	@echo "started docker " ${id}
-#	docker exec -it ${id} /bin/bash -C /root/local/_make/test-build.sh
-#	docker stop ${id}
+test-build:
+	$(eval id = $(shell _make/run-docker.sh ubuntu:24.04 -d))
+	@echo "started docker " ${id}
+	docker exec -it ${id} /bin/bash -C /root/local/_make/test-build.sh
+	docker stop ${id}
 
-test:
-	cd ${HOME} && python3 -c 'import robotic as ry; print("ry version:", ry.__version__, ry.compiled());'
+test: force
+	cd ${HOME} && python3 -c 'import robotic as ry; print("ry version:", ry.version(), ry.compiled(), "\nry path:   ", ry.raiPath(""));'
 
 test2:
 	cd ${HOME} && python3 -c 'import robotic as ry; ry.test.RndScene()'
 
 test3:
-	ry-view $(PY_SITE)/robotic/rai-robotModels/scenarios/pandasTable.g
+	ry-view rai-robotModels/scenarios/pandasTable.g
 
-test-tutorials:
+test-demos:
+	$(MAKE) -j1 -C rai-tutorials run_demos
 	$(MAKE) -j1 -C rai-tutorials run
 
 pull:
@@ -76,3 +77,4 @@ docker-clean:
 	$(shell docker container kill "$(docker container ls -q)")
 	docker system prune
 
+force:	;
