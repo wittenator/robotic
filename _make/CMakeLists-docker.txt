@@ -58,11 +58,11 @@ include_directories(
   botop/src
   $ENV{HOME}/.local/include
   /usr/local/include/eigen3
+  /usr/include/openblas
   )
 
 link_directories(
   $ENV{HOME}/.local/lib
-  /usr/include/openblas
   )
 
 if(USE_PHYSX)
@@ -175,7 +175,7 @@ endif()
 # default/required dependencies
 target_link_libraries(rai PRIVATE
   # ORDER MATTERS! test with -no-undefined linker flag (above)
-  lapack libatlas.a
+  openblas gfortran
   libglfw3.a libGLEW.a libglut.a Xrandr Xxf86vm Xi GLU GL
   libjsoncpp.a libyaml.a libpng16.a libassimp.a libzlibstatic.a
   libfcl.a libccd.a libANN.a libqhull.a

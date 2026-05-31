@@ -14,7 +14,7 @@ ENV MAKEFLAGS="-j$(command nproc --ignore 1)"
 
 RUN dnf -y install epel-release && \
     dnf -y install --enablerepo=powertools \
-        gcc wget cmake clang \
+        gcc gcc-gfortran wget cmake clang \
         zlib-devel freetype-devel \
         mesa-libGLU-devel \
         libXcursor-devel libXi-devel libXinerama-devel libXrandr-devel \
