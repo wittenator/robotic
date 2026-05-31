@@ -57,12 +57,16 @@ include_directories(
   rai/src
   botop/src
   $ENV{HOME}/.local/include
+  # install.sh -gc installs every dependency (hdf5, jsoncpp, libyaml, fcl, assimp, ...)
+  # under /usr/local; add it explicitly so we don't rely on the toolchain's default search
+  /usr/local/include
   /usr/local/include/eigen3
   /usr/include/openblas
   )
 
 link_directories(
   $ENV{HOME}/.local/lib
+  /usr/local/lib
   )
 
 if(USE_PHYSX)
@@ -128,11 +132,9 @@ if(USE_FREETYPE)
 endif()
 
 if(USE_H5)
-  find_package(HDF5 REQUIRED COMPONENTS C CXX)
   add_definitions(-DRAI_H5)
-  include_directories(${HDF5_INCLUDE_DIRS})
   target_link_libraries(rai PRIVATE libhdf5_cpp.a libhdf5.a)
-  message(STATUS "[rai] using H5 libs: hdf5 hdf5_cpp in " ${HDF5_INCLUDE_DIRS})
+  message(STATUS "[rai] using H5 libs: hdf5 hdf5_cpp from /usr/local")
 endif()
 
 if(USE_BULLET)
