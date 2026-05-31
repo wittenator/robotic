@@ -38,8 +38,8 @@ jobs:
           tags: rai-manylinux-${{ matrix.arch }}
           load: true   # make the image available to the docker daemon for `docker run`
           # GitHub Actions layer cache, scoped per-arch so the two builds don't evict each other
-          cache-from: type=gha,scope=${{ matrix.arch }}
-          cache-to: type=gha,mode=max,scope=${{ matrix.arch }}
+          #cache-from: type=gha,scope=${{ matrix.arch }}
+          #cache-to: type=gha,mode=max,scope=${{ matrix.arch }}
 
       - name: Build wheels
         run: |
