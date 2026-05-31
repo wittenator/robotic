@@ -27,6 +27,9 @@ RUN dnf -y install epel-release && \
 #RUN cd /usr/lib64; ln -s libstdc++.so.6.0.19 libstdc++.so
 
 RUN wget https://github.com/MarcToussaint/rai/raw/master/_make/install.sh; chmod a+x install.sh
+# assimp v5.2.5 doesn't compile cleanly under the newer GCC in the base image
+# (-Werror=dangling-reference in the FBX parser); disable warnings-as-errors for it.
+RUN sed -i 's/-DASSIMP_BUILD_TESTS=OFF/-DASSIMP_BUILD_TESTS=OFF -DASSIMP_WARNINGS_AS_ERRORS=OFF/' install.sh
 
 # (some of these we compile manually just to ensure the -fPIC, which is missing in yum packages)
 RUN ./install.sh -gc jsoncpp
