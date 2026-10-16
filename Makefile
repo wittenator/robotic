@@ -6,31 +6,30 @@ PY_SITE = $(VIRTUAL_ENV)/lib/python$(PY_VER)/site-packages
 
 default: compile
 
-compile:
-	$(MAKE) -C build _robotic docstrings install
-
-docs:
-	cd rai-docs && sphinx-build doc ../html
-
-info:
+print-py-info:
 	@echo "PY_VER:" $(PY_VER)
 	@echo "PY_SITE:" $(PY_SITE)
 
-docs-clean:
-	rm -Rf html
+compile:
+	$(MAKE) -C build _robotic docstrings install
 
-local-install:
+install:
 	ln -f -s _make/CMakeLists-ubuntu.txt CMakeLists.txt
-	-rm -f ${HOME}/.local/lib/*rai*
 	cmake . -B build -DPY_VERSION=$(PY_VER)
 	$(MAKE) -C build _robotic docstrings install -j $(shell nproc --ignore 2)
-	python3 -m pip install -e .
+	uv pip install -e .
+
+install-with-hardware:
+	ln -f -s _make/CMakeLists-ubuntu.txt CMakeLists.txt
+	cmake . -B build -DPY_VERSION=$(PY_VER) -DUSE_OPENCV=ON -DUSE_REALSENSE=ON -DUSE_LIBFRANKA=ON -DUSE_TROSSEN=ON -DUSE_BASLER=ON
+	$(MAKE) -C build _robotic docstrings install -j $(shell nproc --ignore 4)
+	uv pip install -e .
 
 local-clean:
 	-rm -Rf $(PY_SITE)/robotic
 	-rm -Rf $(PY_SITE)/robotic-*
 	-rm -f ${HOME}/.local/lib/*rai*
-	-rm -f ${HOME}/.local/bin/*ry*
+	-rm -f ${HOME}/.local/bin/ry-*
 	-rm -Rf ${HOME}/.local/include/rai
 	-rm -Rf robotic/__pycache__ build/bdist* build/lib robotic.egg-info
 
@@ -46,6 +45,12 @@ wheels-upload:
 
 wheels-install:
 	python$(PY_VER) -m pip install dist/robotic-*cp312*.whl --force-reinstall
+
+docs:
+	cd rai-docs && sphinx-build doc ../html
+
+docs-clean:
+	rm -Rf html
 
 test-build:
 	$(eval id = $(shell _make/run-docker.sh ubuntu:24.04 -d))
@@ -67,11 +72,11 @@ test-demos:
 	$(MAKE) -j1 -C rai-tutorials run
 
 pull:
-	cd rai && git pull
-	cd rai-robotModels && git pull
-	cd rai-docs && git pull
-	cd rai-tutorials && git pull
-	cd botop && git pull
+	cd rai && git checkout master && git pull
+	cd rai-robotModels && git checkout master && git pull
+	cd rai-docs && git checkout main && git pull
+	cd rai-tutorials && git checkout main && git pull
+	cd botop && git checkout srcOnly && git pull
 
 docker-clean:
 	$(shell docker container kill "$(docker container ls -q)")

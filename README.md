@@ -25,7 +25,7 @@ Lab](https://argmin.lis.tu-berlin.de/)) operate our robots.
 
 * Pip install:
 
-       pip install robotic numpy
+      pip install robotic numpy
 
 * Tests:
 
@@ -51,55 +51,58 @@ Lab](https://argmin.lis.tu-berlin.de/)) operate our robots.
       ry-info
       ry-test
 
-## Installation from source with real Franka & realsense support
 
-This assumes a standard Ubuntu 24.04 (or 22.04, 20.04) machine.
+## Installation from source (simulation only, no real Franka & realsense support)
 
-* Install Ubuntu and python packages:
+* Clone:
 
-      sudo apt install --yes \
-        g++ clang make gnupg cmake git wget libstdc++-14-dev \
-        liblapack-dev libf2c2-dev libqhull-dev libeigen3-dev \
-        libjsoncpp-dev libyaml-dev libhdf5-dev libpoco-dev libboost-system-dev portaudio19-dev libusb-1.0-0-dev \
-        libx11-dev libxi-dev libxxf86vm-dev libglu1-mesa-dev libglfw3-dev libglew-dev libglm-dev freeglut3-dev libpng-dev libassimp-dev libfreetype6-dev \
-        python3-dev python3 python3-pip
-      
-      python3 -m pip install numpy pybind11 pybind11-stubgen
+	  cd $HOME/git
+      git clone --recursive https://github.com/MarcToussaint/robotic.git
+      cd robotic
 
-* Install some external libs by source. You can skip librealsense and
-  libfranka if you disable below. (To speed up compilation, e.g., set
+* `uv` install:
 
-      export MAKEFLAGS="-j $(command nproc --ignore 2)"
-  
-  To standardize installations, I use a basic script:
+      curl -LsSf https://astral.sh/uv/install.sh | sh
+	  
+* Install dependencies:
 
-      wget https://github.com/MarcToussaint/rai/raw/refs/heads/marc/_make/install.sh; chmod a+x install.sh
+      cp rai/_make/install.sh .
+	  source ./install.sh vars_only #defines the following dependency packages
+      sudo apt install --yes ${ubuntu_rai} ${ubuntu_botop} ${ubuntu_python}
       ./install.sh libccd
       ./install.sh fcl
       ./install.sh libann
+      ./install.sh opencv
       ./install.sh physx
+      uv pip install numpy pybind11 pybind11-stubgen
+
+* Compile and install (look into `Makefile` to debug):
+
+      make install
+
+* Test:
+
+      ry-info
+
+
+## Installation from source with real Franka & realsense & trossen_arm & basler support
+
+Essentially the same as above, but some more dependencies and according flags in cmake:
+
+* Additional dependencies: CHOOSE THE [LIBFRANKA VERSION](https://frankarobotics.github.io/docs/doc/libfranka/docs/compatibility_matrix.html)
+
       ./install.sh librealsense
-      ./install.sh libfranka  ## for OLD frankas instead:   ./install.sh -v 0.8.0 libfranka (and you need to patch it...)
+      ./install.sh -v 0.13.3 libfranka  
+      ./install.sh -v 0.8.0 libfranka  
+      ./install.sh -v 1.10.0 trossen_arm
+      ./install.sh basler
 
-* Clone, compile and install this repo (note the USE_REALSENSE and USE_LIBFRANKA options!):
+* Compile and install (look into `Makefile` to debug):
 
-      cd $HOME/git
-      git clone --recursive https://github.com/MarcToussaint/robotic.git
-      cd robotic
-      cp _make/CMakeLists-ubuntu.txt CMakeLists.txt
-      export PY_VERSION=`python3 -c "import sys; print(str(sys.version_info[0])+'.'+str(sys.version_info[1]))"`
-      cmake -DPY_VERSION=$PY_VERSION -DUSE_REALSENSE=ON -DUSE_LIBFRANKA=ON . -B build
-      make -C build _robotic install
+      make install-with-hardware
 
-* The following should also compile docstrings, but might fail as this
-  is not yet robust across Ubuntu distributions:
 
-      make -C build _robotic docstrings install
-
-* This should install the compiled libraries (which are the python module) in the local src/robotic folder, next to other parts of the python module. To install:
-
-      pip install -e .
-      ry-info  #to test the installation
+## Testing the Franka
 
 * For using Franka, recall that the user needs to be part of the `realtime` and `dialout` unix group:
 
@@ -114,26 +117,26 @@ This assumes a standard Ubuntu 24.04 (or 22.04, 20.04) machine.
   on the
   [tutorials page](https://marctoussaint.github.io/robotic/tutorials.html)
   to test and debug first steps with the real franka. In particular
-  test `ry-bot -real -up -home` and debug as explained there.
+  test `ry-bot franka.16 -real -up -home` and debug as explained there.
+  
+* Trouble shooting: Perhaps the [github build script](.github/workflows/build.yml) helps?
+
 
 ## Building the wheels within a manylinux docker
 
 * Build the docker
-```
-_make/build-docker.sh
-```
+
+      _make/build-docker.sh
 
 * Compile wheels (this runs `local/_make/build-wheels.sh`
 inside the docker -- see inside the `Makefile`)
-```
-make wheels
-```
+
+      make wheels
 
 * Install these wheels locally with pip or push wheels to pypi -- see inside the `Makefile`
-```
-make wheels-install
-make wheels-upload
-```
+
+      make wheels-install
+      make wheels-upload
 
 
 <!--

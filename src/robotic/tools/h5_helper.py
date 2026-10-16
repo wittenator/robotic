@@ -3,10 +3,17 @@
 import h5py
 import yaml
 import numpy as np
+import os
 
 class H5Writer:
     def __init__(self, filename):
         self.fil = h5py.File(filename, 'w')
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.fil.close()
 
     def write(self, name, data, dtype = 'float64'):
         self.fil.create_dataset(name, data=data, dtype=dtype)
@@ -25,6 +32,8 @@ class H5Writer:
 class H5Reader:
     def __init__(self, filename):
         self.filename = filename
+        if not os.path.isfile(filename):
+            raise Exception(f'==ry== h5 file {filename} does not exist (from {os.getcwd()})')
         self.fil = h5py.File(filename, 'r')
 
     def print_objs(self, name, obj):
@@ -34,14 +43,17 @@ class H5Reader:
                 str = ''.join([chr(x) for x in obj[()]])
                 print('       ', str)
             elif obj.dtype=='object':
-                total_size=0
-                print('       ', end='')
-                for i in range(obj.size):
-                    o = obj[i]
-                    if obj.size<20:
-                        print(o.shape, end='')
-                    total_size += o.size*o.dtype.itemsize
-                print(f'list of {obj[0].dtype} arrays {total_size/1024:.2f}kB')
+                if obj.size==0:
+                    print('       EMPTY list of arrays')
+                else:
+                    total_size=0
+                    print('       ', end='')
+                    for i in range(obj.size):
+                        o = obj[i]
+                        if obj.size<20:
+                            print(o.shape, end='')
+                        total_size += o.size*o.dtype.itemsize
+                    print(f' list of {obj[0].dtype} arrays {total_size/1024:.2f}kB')
             elif obj.size<20:
                 print('       ', obj[()])
         else:
@@ -76,8 +88,8 @@ class H5Reader:
                     self.ALL[name] = str
             else:
                 self.ALL[name] = self.read(name)
-        else:
-            print('---', obj.name)
+        # else:
+        #     print('---', obj.name)
 
     def read_all(self):
         self.ALL = {}
