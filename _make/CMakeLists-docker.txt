@@ -35,8 +35,9 @@ option(USE_H5 "link to h5 library" ON)
 option(USE_FREETYPE "link to freetype2 library" ON)
 
 ## compile options
+## -fsigned-char: plain char is unsigned on arm/aarch64
 add_compile_options(
-  -O3 -g -w -fPIC
+  -O3 -g -w -fPIC -fsigned-char
   $<$<COMPILE_LANGUAGE:CXX>:-std=c++17>
   $<$<COMPILE_LANGUAGE:CXX>:-Wno-terminate>
   $<$<COMPILE_LANGUAGE:CXX>:-Wno-array-bounds>
@@ -60,20 +61,19 @@ include_directories(
   rai/src
   botop/src
   $ENV{HOME}/.local/include
-  # install.sh -gc installs every dependency (hdf5, jsoncpp, libyaml, fcl, assimp, ...)
-  # under /usr/local; add it explicitly so we don't rely on the toolchain's default search
-  /usr/local/include
   /usr/local/include/eigen3
   /usr/include/openblas
   )
 
 link_directories(
   $ENV{HOME}/.local/lib
-  /usr/local/lib
+  /usr/lib64/atlas
   )
 
 if(USE_PHYSX)
-  link_directories(/usr/local/bin/linux.clang/release)
+  # PhysX output dir is linux.clang on x86_64, linux.aarch64 on arm
+  file(GLOB PHYSX_LIB_DIRS /usr/local/bin/linux.*/release)
+  link_directories(${PHYSX_LIB_DIRS})
 endif()
 
 file(GLOB SRC_AlgoLewiner rai/src/Algo/Lewiner/*.cpp)
@@ -144,7 +144,7 @@ endif()
 if(USE_H5)
   add_definitions(-DRAI_H5)
   target_link_libraries(rai PRIVATE libhdf5_cpp.a libhdf5.a)
-  message(STATUS "[rai] using H5 libs: hdf5 hdf5_cpp from /usr/local")
+  message(STATUS "[rai] using H5 libs: hdf5 hdf5_cpp in " ${HDF5_INCLUDE_DIRS})
 endif()
 
 if(USE_BULLET)
